@@ -1,0 +1,31 @@
+body { 
+    margin:0; 
+    padding:0;
+}
+#counter {
+    position: fixed;
+    z-index: 2000;
+    top: 20px;
+    left: 20px;
+    font-size: 40px;
+    color:white;
+}
+#map { 
+    position:absolute; 
+    top:0; 
+    bottom:0; 
+    width:100%; 
+}
+#playControl {
+    cursor: pointer;
+    background-image: url(play.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3000;
+}
