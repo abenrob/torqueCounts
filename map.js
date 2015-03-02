@@ -14,7 +14,7 @@ var CartoDB_DarkMatterNoLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/d
 
 var style =
 'Map {' +
-    '-torque-frame-count:5761;' +
+    '-torque-frame-count:512;' +
     '-torque-animation-duration:8;' +
     '-torque-time-attribute:"loc_date";' +
     '-torque-aggregation-function:"count(cartodb_id)";' +
@@ -70,6 +70,7 @@ function setTorque(){
         blendmode: 'lighter',
         tiler_protocol: 'https',
         //loop: false,
+        pauseMax: true,
         tiler_port: 443
     });
 
@@ -95,13 +96,14 @@ function playTorque(){
         maxCount = Math.max(maxCount,curTot);
 
         $('#counter').html(tYear+': '+curTot.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-
-        if (changes.step === 0) {
-            torqueLayer.pause();
+        // when we hit max 
+        if (changes.step === torqueLayer.options.steps) { 
+            // remove change watch  
             torqueLayer.off('change:time');
-            torqueLayer.setStep(torqueLayer.options.steps);
-            $('#counter').html(maxYear+': '+maxCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-            window.setTimeout(function(){$('#playControl').fadeIn();},2000);
+            // pause in case changes object catches max before pauseMax
+            torqueLayer.pause();
+            // fade in play control after 3 seconds
+            window.setTimeout(function(){$('#playControl').fadeIn();},3000);
         }
     });
 
@@ -131,7 +133,6 @@ $.ajax({
         numDays = (lastDay-firstDay)/(1000*60*60*24);
         setTorque();
         $('#playControl').on('click',function(){
-            console.log('click');
             clearPlay();
         })
     }
