@@ -69,8 +69,7 @@ function setTorque(){
         cartocss: style.replace('alldayz',String(numDays)),
         blendmode: 'lighter',
         tiler_protocol: 'https',
-        //loop: false,
-        pauseMax: true,
+        loop: false,
         tiler_port: 443
     });
 
