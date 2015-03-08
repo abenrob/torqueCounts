@@ -14,8 +14,8 @@ var CartoDB_DarkMatterNoLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/d
 
 var style =
 'Map {' +
-    '-torque-frame-count:512;' +
-    '-torque-animation-duration:8;' +
+    '-torque-frame-count:1024;' +
+    '-torque-animation-duration:70;' +
     '-torque-time-attribute:"loc_date";' +
     '-torque-aggregation-function:"count(cartodb_id)";' +
     '-torque-resolution:2;' +
@@ -65,7 +65,7 @@ var maxYear = 0, maxCount = 0;
 function setTorque(){
     torqueLayer = new L.TorqueLayer({
         user: 'abenrob',
-        table: 'Timestamped_locations',
+        table: 'timestamped_locations',
         cartocss: style.replace('alldayz',String(numDays)),
         blendmode: 'lighter',
         tiler_protocol: 'https',
@@ -79,8 +79,11 @@ function setTorque(){
 function playTorque(){
     torqueLayer.setStep(1);
     torqueLayer.on('change:time', function(changes) {
+        console.log(changes.time);
         var torqueDate = changes.time.toDateString();
         var tYear = changes.time.getFullYear()||firstDay.getFullYear();
+        var tMonth = (changes.time.getMonth()||firstDay.getMonth())+1;
+        if (tMonth < 10){tMonth = '0'+tMonth};
 
         var match = _.find(counts, function(rec){
             var thisDate = new Date(rec.date).toDateString();
@@ -93,8 +96,9 @@ function playTorque(){
 
         maxYear = Math.max(maxYear,tYear);
         maxCount = Math.max(maxCount,curTot);
-
-        $('#counter').html(tYear+': '+curTot.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        $('#counter').removeClass('hidden');
+        $('#curYear').html(tYear+"/"+tMonth);
+        $('#curCount').html(curTot.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         // when we hit max 
         if (changes.step === torqueLayer.options.steps) { 
             // remove change watch  
@@ -114,7 +118,9 @@ function playTorque(){
 function clearPlay(){
     torqueLayer.off('change:time');
     torqueLayer.stop();
-    $('#counter').html('');
+    $('#counter').addClass('hidden');
+    $('#curYear').html('');
+    $('#curCount').html('');
     curTot = 0;
     playTorque();
 };

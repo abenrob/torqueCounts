@@ -4,7 +4,6 @@
   <title>Torque</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
   <!--[if lte IE 8]>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" />
@@ -12,7 +11,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="counter"></div>
+  <div id="counter" class="hidden">
+    <p class='countTitle'>YEAR/MONTH:</p>
+    <p id='curYear'></p>
+    <p class='countTitle'>NEXUS CUSTOMER LOCATIONS:</p>
+    <p id='curCount'></p>
+  </div>
   <div id="playControl"></div>
   <div id="map"></div>
 
