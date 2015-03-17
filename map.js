@@ -1,8 +1,8 @@
 var map = L.map('map',{
     zoomControl: false,
     attributionControl: false,
-    center: [39.828175, -98.5795],
-    zoom: 4
+    center: [45, -100],
+    zoom: 3
 });
 
 var CartoDB_DarkMatterNoLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
@@ -15,7 +15,7 @@ var CartoDB_DarkMatterNoLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/d
 var style =
 'Map {' +
     '-torque-frame-count:1024;' +
-    '-torque-animation-duration:70;' +
+    '-torque-animation-duration:50;' +
     '-torque-time-attribute:"loc_date";' +
     '-torque-aggregation-function:"count(cartodb_id)";' +
     '-torque-resolution:2;' +
@@ -79,7 +79,6 @@ function setTorque(){
 function playTorque(){
     torqueLayer.setStep(1);
     torqueLayer.on('change:time', function(changes) {
-        console.log(changes.time);
         var torqueDate = changes.time.toDateString();
         var tYear = changes.time.getFullYear()||firstDay.getFullYear();
         var tMonth = (changes.time.getMonth()||firstDay.getMonth())+1;
