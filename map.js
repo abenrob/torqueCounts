@@ -25,8 +25,8 @@ var style =
     'comp-op: lighter;' +
     'marker-fill-opacity: 0.2;' +
     'marker-line-color: #FFF;' +
-    'marker-line-width: 0;' +
-    'marker-line-opacity: 1;' +
+    'marker-line-width: 0.5;' +
+    'marker-line-opacity: 0.5;' +
     'marker-type: ellipse;' +
     'marker-width: 2;' +
     'marker-fill: #09929e;' +
@@ -34,26 +34,38 @@ var style =
 '#timestamped_locations[frame-offset=1] {' +
     'marker-width:4;' +
     'marker-fill-opacity:0.1; ' +
+    'marker-line-width: 0;' +
+    'marker-line-opacity: 0;' +
 '}' +
 '#timestamped_locations[frame-offset=2] {' +
     'marker-width:6;' +
     'marker-fill-opacity:0.05; ' +
+    'marker-line-width: 0;' +
+    'marker-line-opacity: 0;' +
 '}' +
 '#timestamped_locations[frame-offset=3] {' +
     'marker-width:8;' +
     'marker-fill-opacity:0.03333333333333333; ' +
+    'marker-line-width: 0;' +
+    'marker-line-opacity: 0;' +
 '}' +
 '#timestamped_locations[frame-offset=4] {' +
     'marker-width:10;' +
     'marker-fill-opacity:0.025; ' +
+    'marker-line-width: 0;' +
+    'marker-line-opacity: 0;' +
 '}' +
 '#timestamped_locations[frame-offset=5] {' +
     'marker-width:12;' +
     'marker-fill-opacity:0.02; ' +
+    'marker-line-width: 0;' +
+    'marker-line-opacity: 0;' +
 '}' +
 '#timestamped_locations[frame-offset=6] {' +
     'marker-width:14;' +
     'marker-fill-opacity:0.016666666666666666; ' +
+    'marker-line-width: 0;' +
+    'marker-line-opacity: 0;' +
 '}';
 
 var torqueLayer;
