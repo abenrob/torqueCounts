@@ -1,7 +1,10 @@
+var outcenter = [15,-6];
+var incenter = [45, -100]
+
 var map = L.map('map',{
     zoomControl: false,
     attributionControl: false,
-    center: [45, -100],
+    center: incenter,
     zoom: 3
 });
 
@@ -100,7 +103,6 @@ function playTorque(){
             var thisDate = new Date(rec.date).toDateString();
             return thisDate == torqueDate;
         });
-        console.log('change');
         if (match) {
             //console.log('match');
             curTot = match.count;
@@ -121,7 +123,7 @@ function playTorque(){
             torqueLayer.pause();
             // fade in play control after 3 seconds
             window.setTimeout(function(){
-                map.setView([15,-6],2,{animate: true, duration: 5.0});
+                map.setView(outcenter,2);
                 window.setTimeout(function(){
                     $('#rePlayControl').fadeIn();
                 },3000);
