@@ -76,9 +76,9 @@ var maxYear = 0, maxCount = 0;
 
 function setTorque(){
     torqueLayer = new L.TorqueLayer({
-        user: 'abenrob',
-        table: 'timestamped_locations',
-        cartocss: style.replace('alldayz',String(numDays)),
+        user: 'nexuscarto',
+        table: 'all_locations',
+        cartocss: style,
         blendmode: 'lighter',
         tiler_protocol: 'https',
         loop: false,
@@ -100,9 +100,11 @@ function playTorque(){
             var thisDate = new Date(rec.date).toDateString();
             return thisDate == torqueDate;
         });
-
+        console.log('change');
         if (match) {
-            curTot = match.count
+            //console.log('match');
+            curTot = match.count;
+            curCountries = match.countrylist.length;
         }
 
         maxYear = Math.max(maxYear,tYear);
@@ -110,6 +112,7 @@ function playTorque(){
         $('#counter').removeClass('hidden');
         $('#curYear').html(tYear+"/"+tMonth);
         $('#curCount').html(curTot.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        $('#curCountries').html(curCountries.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         // when we hit max 
         if (changes.step === torqueLayer.options.steps) { 
             // remove change watch  
@@ -117,12 +120,18 @@ function playTorque(){
             // pause in case changes object catches max before pauseMax
             torqueLayer.pause();
             // fade in play control after 3 seconds
-            window.setTimeout(function(){$('#playControl').fadeIn();},3000);
+            window.setTimeout(function(){
+                map.setView([15,-6],2,{animate: true, duration: 5.0});
+                window.setTimeout(function(){
+                    $('#rePlayControl').fadeIn();
+                },3000);
+            },2000);
         }
     });
 
     torqueLayer.play();
     $('#playControl').fadeOut();
+    $('#rePlayControl').fadeOut();
     
 };
 
@@ -132,23 +141,49 @@ function clearPlay(){
     $('#counter').addClass('hidden');
     $('#curYear').html('');
     $('#curCount').html('');
-    curTot = 0;
+    $('#curCountries').html('');
+    curTot = 0; curCountries = 0;
     playTorque();
 };
 
-var qry = 'SELECT DISTINCT date_part(\'epoch\',loc_date)*1000 AS date,count(*) OVER (ORDER BY date_trunc(\'day\', "loc_date")) AS count FROM   timestamped_locations ORDER  BY 1';
+function countsPrep(counts){
+    var counter = 0;
+    var countrycounter = 0;
+    var countries = [];
+    var outcouts = [];
+    _.each(counts, function(epoch){
+        counter = counter + epoch.count;
+        countries = _.union(countries,epoch.countries);
+        outcouts.push({date: epoch.date, count: counter, countrylist: countries});
+    })
+    return outcouts;
+};
+
+var qry = 'SELECT l.count,c.countries,c.date from (' +
+            'SELECT date_part(\'epoch\',loc_date)*1000 AS date,' +
+            'ARRAY_AGG(DISTINCT country ORDER BY country) AS countries ' +
+            'FROM all_locations ' +
+            'GROUP BY date_part(\'epoch\',loc_date)*1000) c ' +
+            'JOIN ' +
+            '(SELECT date_part(\'epoch\',loc_date)*1000 AS date,count(cartodb_id) AS count ' +
+            'FROM all_locations ' +
+            'GROUP BY date_part(\'epoch\',loc_date)*1000) l ON l.date = c.date ' +
+            'ORDER BY date';
 
 $.ajax({
-    url: "http://abenrob.cartodb.com/api/v2/sql?q="+qry,
+    url: "http://nexuscarto.cartodb.com/api/v2/sql?q="+qry,
     dataType: "json",
     cache: true,
     success: function (data) {
-        counts = data.rows;
+        counts = countsPrep(data.rows);
         firstDay = new Date(counts[0].date);
         lastDay = new Date(counts[counts.length-1].date);
         numDays = (lastDay-firstDay)/(1000*60*60*24);
         setTorque();
         $('#playControl').on('click',function(){
+            clearPlay();
+        })
+        $('#rePlayControl').on('click',function(){
             clearPlay();
         })
     }
